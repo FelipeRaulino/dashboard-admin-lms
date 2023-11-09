@@ -1,0 +1,27 @@
+.sidebar {
+  border-right: 1px solid #3f3f3f;
+  background-color: #141922;
+  min-width: 240px;
+  padding: 2rem 0 2rem 0;
+}
+
+.sidebar > ul > li {
+  margin-bottom: 1rem;
+}
+
+.sidebar > ul > li > a {
+  display: flex;
+  align-items: center;
+  padding: 1rem 0.5rem 1rem 1rem;
+  color: #ddd;
+  gap: 0.5rem;
+  transition: all 250ms linear;
+}
+
+.sidebar > ul > li > a:hover {
+  background-color: #1a202c;
+}
+
+.sidebar > ul > li > a.active {
+  background-color: #1a202c;
+}
