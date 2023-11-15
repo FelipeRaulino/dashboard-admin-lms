@@ -5,6 +5,12 @@
   padding: 2rem 0 2rem 0;
 }
 
+.sidebar > ul {
+  position: sticky;
+  top: 10px;
+  left: 0;
+}
+
 .sidebar > ul > li {
   margin-bottom: 1rem;
 }
@@ -24,4 +30,16 @@
 
 .sidebar > ul > li > a.active {
   background-color: #1a202c;
+}
+
+@media (min-width: 738px) and (max-width: 1000px) {
+  .sidebar {
+    min-width: 160px;
+  }
+}
+
+@media (max-width: 780px) {
+  .sidebar {
+    display: none;
+  }
 }

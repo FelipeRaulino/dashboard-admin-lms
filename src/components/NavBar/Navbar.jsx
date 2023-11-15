@@ -2,6 +2,7 @@ import React from "react";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import SearchIcon from "@mui/icons-material/Search";
+import MenuIcon from "@mui/icons-material/Menu";
 
 import "./Navbar.css";
 import { Avatar } from "@mui/material";
@@ -24,6 +25,7 @@ const Navbar = () => {
         </div>
         <SearchIcon />
         <NotificationsIcon />
+        <MenuIcon />
       </div>
     </nav>
   );

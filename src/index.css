@@ -24,5 +24,11 @@ a {
 .user-profile,
 .products,
 .sales {
+  display: flex;
+  flex-direction: column;
   padding: 1rem 1.5rem;
+}
+
+h1 {
+  font-size: 2rem;
 }
