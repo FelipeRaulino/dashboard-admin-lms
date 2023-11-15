@@ -34,6 +34,86 @@
   font-weight: bold;
 }
 
+.navbar__menu-overlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.95);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  z-index: 999;
+  height: 100vh;
+  max-height: unset;
+  padding: 1.5rem 0;
+  animation: navbar-menu-animation 500ms;
+}
+
+.menu__close-btn {
+  position: fixed;
+  top: 0.5rem;
+  right: 0.5rem;
+  cursor: pointer;
+  color: #9c9c9c;
+  transition: color 250ms !important;
+}
+
+.menu__close-btn:hover {
+  color: #ddd;
+}
+
+.menu-modal__header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.navbar__menu-overlay > nav {
+  flex: 1;
+  display: flex;
+  margin-top: 1.5rem;
+}
+
+.navbar__menu-overlay > nav > ul {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.navbar__menu-overlay > nav > ul > li {
+  margin: 1rem 0;
+}
+
+.navbar__menu-overlay > nav > ul > li > a {
+  font-size: 1.5rem;
+  color: #9c9c9c;
+}
+
+.navbar__menu-overlay > nav > ul > li > a.active {
+  color: #ddd;
+}
+
+.navbar__menu-overlay-hidden {
+  display: none;
+}
+
+@keyframes navbar-menu-animation {
+  0% {
+    width: 0px;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+@media (min-width: 781px) {
+  .navbar__icons > svg:nth-of-type(3) {
+    display: none;
+  }
+}
+
 @media (max-width: 780px) {
   .navbar__user {
     display: none;
