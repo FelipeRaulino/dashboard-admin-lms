@@ -24,28 +24,43 @@ import PersonIcon from "@mui/icons-material/Person";
 
 import "./Dashboard.css";
 
-import { getTopBuyers } from "../../../sales/utils/salesUtils";
+import {
+  getSalesPerMonthForChart,
+  getTopBuyers,
+  getTotalSalesFormatted,
+} from "../../../sales/utils/salesUtils";
 import { Avatar } from "@mui/material";
 import { getUserTotals } from "../../../users/utils/usersUtils";
 import { NavLink } from "react-router-dom";
+import { totalProducts } from "../../../products/utils/productsUtils";
 
 const Dashboard = () => {
   const [topBuyers, setTopBuyers] = React.useState([]);
   const [userTotals, setUserTotals] = React.useState(0);
+  const [productsTotal, setProductsTotal] = React.useState(0);
+  const [salesPerMonth, setSalesPerMonth] = React.useState([]);
+  const [customSalesTotal, setCustomSalesTotal] = React.useState([]);
   const avatarImages = [avatar1, avatar2, avatar3, avatar4, avatar5];
 
-  React.useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const result = await getTopBuyers();
-        const utotal = await getUserTotals();
-        setTopBuyers(result);
-        setUserTotals(utotal);
-      } catch (error) {
-        console.error("Erro ao obter os principais compradores:", error);
-      }
-    };
+  const fetchData = async () => {
+    try {
+      const result = await getTopBuyers();
+      const utotal = await getUserTotals();
+      const ptotal = await totalProducts();
+      const spmtotal = await getSalesPerMonthForChart();
+      const customST = await getTotalSalesFormatted();
 
+      setTopBuyers(result);
+      setUserTotals(utotal);
+      setProductsTotal(ptotal);
+      setSalesPerMonth(spmtotal);
+      setCustomSalesTotal(customST);
+    } catch (error) {
+      console.error("Erro ao obter os principais compradores:", error);
+    }
+  };
+
+  React.useEffect(() => {
     fetchData();
   }, []);
 
@@ -57,68 +72,34 @@ const Dashboard = () => {
     { name: "Page A", uv: 580, pv: 2400, amt: 2400 },
   ];
 
-  const data01 = [
+  const pageViews = [
     {
-      name: "Group A",
-      value: 400,
+      name: "Junho",
+      totalViews: 4000,
     },
     {
-      name: "Group B",
-      value: 300,
+      name: "Julho",
+      totalViews: 3000,
     },
     {
-      name: "Group C",
-      value: 300,
+      name: "Agosto",
+      totalViews: 2000,
     },
     {
-      name: "Group D",
-      value: 200,
+      name: "Setembro",
+      totalViews: 2780,
     },
     {
-      name: "Group E",
-      value: 278,
+      name: "Outubro",
+      totalViews: 1890,
     },
     {
-      name: "Group F",
-      value: 189,
-    },
-  ];
-
-  const dataBarChart = [
-    {
-      name: "Page A",
-      uv: 4000,
-      pv: 2400,
+      name: "Novembro",
+      totalViews: 2390,
     },
     {
-      name: "Page B",
-      uv: 3000,
-      pv: 1398,
-    },
-    {
-      name: "Page C",
-      uv: 2000,
-      pv: 9800,
-    },
-    {
-      name: "Page D",
-      uv: 2780,
-      pv: 3908,
-    },
-    {
-      name: "Page E",
-      uv: 1890,
-      pv: 4800,
-    },
-    {
-      name: "Page F",
-      uv: 2390,
-      pv: 3800,
-    },
-    {
-      name: "Page G",
-      uv: 3490,
-      pv: 4300,
+      name: "Dezembro",
+      totalViews: 3490,
     },
   ];
 
@@ -174,10 +155,10 @@ const Dashboard = () => {
             <div className="totals__item-first">
               <div className="item__description">
                 <PersonIcon fontSize="large" />
-                <h4>Total de clientes</h4>
+                <h4>Total de produtos</h4>
               </div>
-              <span>{userTotals}</span>
-              <NavLink to="/users">Ver todos</NavLink>
+              <span>{productsTotal}</span>
+              <NavLink to="/products">Ver todos</NavLink>
             </div>
             <div className="totals__item-second">
               <ResponsiveContainer width="80%" height={80}>
@@ -194,12 +175,18 @@ const Dashboard = () => {
             <PersonIcon fontSize="large" />
             <h3>Total de vendas</h3>
           </div>
+          <span className="item-3__total-value">
+            {salesPerMonth.reduce((acc, salesItem) => {
+              acc += salesItem.totalSales;
+              return acc;
+            }, 0)}
+          </span>
           <div className="item-3__chart__wrapper">
             <ResponsiveContainer width="95%" height="60%">
-              <LineChart data={data}>
+              <LineChart data={salesPerMonth}>
                 <XAxis dataKey="name" />
                 <YAxis />
-                <Line type="monotone" dataKey="uv" stroke="#8884d8" />
+                <Line type="monotone" dataKey="totalSales" stroke="#8884d8" />
                 <Tooltip />
               </LineChart>
             </ResponsiveContainer>
@@ -211,9 +198,9 @@ const Dashboard = () => {
             <ResponsiveContainer width="90%" height="80%">
               <PieChart>
                 <Pie
-                  data={data01}
-                  dataKey="value"
-                  nameKey="name"
+                  data={customSalesTotal}
+                  dataKey="quantidadeVendas"
+                  nameKey="categoria"
                   cx="50%"
                   cy="50%"
                   innerRadius="60%"
@@ -230,12 +217,12 @@ const Dashboard = () => {
           <h3>Fluxo de visitas</h3>
           <div className="item-5__chart-wrapper">
             <ResponsiveContainer width="95%" height="75%">
-              <BarChart data={dataBarChart}>
+              <BarChart data={pageViews}>
                 <XAxis dataKey="name" />
                 <YAxis />
                 <Tooltip />
                 <Legend />
-                <Bar dataKey="uv" fill="#82ca9d" />
+                <Bar dataKey="totalViews" fill="#82ca9d" />
               </BarChart>
             </ResponsiveContainer>
           </div>
