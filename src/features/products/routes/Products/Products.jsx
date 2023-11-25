@@ -22,15 +22,7 @@ const Products = () => {
 
     setProducts(
       productsResponse.map((product) => {
-        return {
-          id: product.id,
-          title: product.title,
-          cat: product.category,
-          desc: product.description,
-          image: product.image,
-          price: product.price,
-          rating: product.rating,
-        };
+        return product
       })
     );
   }
@@ -63,13 +55,13 @@ const Products = () => {
                   {product.title} [$ {product.price}]
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  Categoria: {product.cat}
+                  Categoria: {product.category}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
                   Estoque: {product.rating.count}
                 </Typography>
                 <Typography variant="body2">
-                  Descrição: {product.desc}
+                  Descrição: {product.description}
                 </Typography>
               </CardContent>
               <CardActions sx={{marginRight: 5, textAlign: 'center',}}>
