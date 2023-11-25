@@ -18,13 +18,7 @@ const Products = () => {
   const [products, setProducts] = React.useState([]);
 
   async function fetchData() {
-    const productsResponse = await getProducts();
-
-    setProducts(
-      productsResponse.map((product) => {
-        return product
-      })
-    );
+    setProducts(await getProducts());
   }
 
   React.useEffect(() => {
