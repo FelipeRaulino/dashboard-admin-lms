@@ -40,23 +40,54 @@ const Dashboard = () => {
   const [productsTotal, setProductsTotal] = React.useState(0);
   const [salesPerMonth, setSalesPerMonth] = React.useState([]);
   const [customSalesTotal, setCustomSalesTotal] = React.useState([]);
+
   const avatarImages = [avatar1, avatar2, avatar3, avatar4, avatar5];
 
   const fetchData = async () => {
-    try {
-      const result = await getTopBuyers();
-      const utotal = await getUserTotals();
-      const ptotal = await totalProducts();
-      const spmtotal = await getSalesPerMonthForChart();
-      const customST = await getTotalSalesFormatted();
+    const topBuyersLocalStorage = localStorage.getItem("topBuyers");
+    const userTotalsLocalStorage = localStorage.getItem("userTotals");
+    const productTotalLocalStorage = localStorage.getItem("productTotal");
+    const salesPerMonthLocalStorage = localStorage.getItem("salesPerMonth");
+    const customSalesTotalLocalStorage =
+      localStorage.getItem("customSalesTotal");
 
-      setTopBuyers(result);
-      setUserTotals(utotal);
-      setProductsTotal(ptotal);
-      setSalesPerMonth(spmtotal);
-      setCustomSalesTotal(customST);
-    } catch (error) {
-      console.error("Erro ao obter os principais compradores:", error);
+    if (
+      topBuyersLocalStorage &&
+      userTotalsLocalStorage &&
+      productTotalLocalStorage &&
+      salesPerMonthLocalStorage &&
+      customSalesTotalLocalStorage
+    ) {
+      setTopBuyers(JSON.parse(topBuyersLocalStorage));
+      setUserTotals(JSON.parse(userTotalsLocalStorage));
+      setProductsTotal(JSON.parse(productTotalLocalStorage));
+      setSalesPerMonth(JSON.parse(salesPerMonthLocalStorage));
+      setCustomSalesTotal(JSON.parse(customSalesTotalLocalStorage));
+    } else {
+      try {
+        const result = await getTopBuyers();
+        const utotal = await getUserTotals();
+        const ptotal = await totalProducts();
+        const spmtotal = await getSalesPerMonthForChart();
+        const customST = await getTotalSalesFormatted();
+
+        setTopBuyers(result);
+        localStorage.setItem("topBuyers", JSON.stringify(result));
+
+        setUserTotals(utotal);
+        localStorage.setItem("userTotals", JSON.stringify(utotal));
+
+        setProductsTotal(ptotal);
+        localStorage.setItem("productTotal", JSON.stringify(ptotal));
+
+        setSalesPerMonth(spmtotal);
+        localStorage.setItem("salesPerMonth", JSON.stringify(spmtotal));
+
+        setCustomSalesTotal(customST);
+        localStorage.setItem("customSalesTotal", JSON.stringify(customST));
+      } catch (error) {
+        console.error("Erro:", error);
+      }
     }
   };
 

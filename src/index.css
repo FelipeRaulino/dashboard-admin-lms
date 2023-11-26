@@ -27,6 +27,7 @@ a {
   display: flex;
   flex-direction: column;
   padding: 1rem 1.5rem;
+  max-width: 100%;
 }
 
 h1 {
