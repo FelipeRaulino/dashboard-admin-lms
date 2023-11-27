@@ -1,0 +1,42 @@
+form {
+  display: flex;
+  flex-direction: column;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+img {
+  width: 20%;
+}
+
+p {
+  text-align: center;
+  margin-top: 3%;
+}
+
+.titulo {
+  text-align: center;
+  margin-top: auto;
+}
+
+label {
+  margin-bottom: 10px;
+}
+
+input {
+  margin-bottom: 16px;
+  padding: 8px;
+  font-size: 16px;
+}
+
+button {
+  background-color: #5761c1;
+  color: rgb(255, 255, 255);
+  padding: 10px 15px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: rgb(52, 77, 158);
+}
