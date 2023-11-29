@@ -4,48 +4,99 @@ import "./UserProfile.css";
 
 const UserProfile = () => {
   return (
-    <section class="user-profile">
+    <section class="formulario">
       <h1>Pefil do Usuário</h1>
       <br />
-      <h1 class="titulo">Formulário de cadastro</h1>
+      <h1 class="titulo">Formulário de Interesses:</h1>
       <br />
-      <p>
-        <img src="src/assets/imagemPerfil.png"></img>
-      </p>
-      <div class="formulario">
+      <form>
+        <label for="nome">Nome:</label>
         <br />
-        <form>
-          <label>Primeiro Nome:</label>
-          <br />
-          <input type="text" size="50" name="primeironome" />
-          <br />
-          <label>Segundo Nome:</label>
-          <br />
-          <input type="text" name="segundonome" />
-          <br />
-          <label>CPF:</label>
-          <br />
-          <input type="number" name="cpf" />
-          <br />
-          <label>Telefone:</label>
-          <br />
-          <input type="number" name="segundonome" />
-          <br />
-          <label>Email:</label>
-          <br />
-          <input type="email" name="email" />
-          <br />
-          <label>Senha:</label>
-          <br />
-          <input type="password" name="senha" />
-          <br />
-          <label>Repetir Senha:</label>
-          <br />
-          <input type="password" name="repetirsenha" />
-          <br />
-          <button type="submit">Enviar</button>
-        </form>
-      </div>
+        <input class="input" type="text" id="nome" name="nome" />
+        <br />
+
+        <label for="email">Email:</label>
+        <br />
+        <input class="input" type="email" id="email" name="email" />
+        <br />
+
+        <label for="regiao">Prefência por regiao de compra:</label>
+        <select id="regiao" name="regioes">
+          <option value="Norte">Norte</option>
+          <option value="Nordeste">Nordeste</option>
+          <option value="Sul">Sul</option>
+          <option value="Centro-Oeste">Centro-Oeste</option>
+          <option value="Sudeste">Sudeste</option>
+        </select>
+
+        <label>Escolha categoria de interesse:</label>
+        <br />
+        <div class="checkbox-group">
+          <label for="eletronicos">
+            <input
+              type="checkbox"
+              id="eletronicos"
+              name="interesses"
+              value="eletronicos"
+            />
+            Eletrônicos
+          </label>
+
+          <label for="calcados">
+            <input
+              type="checkbox"
+              id="calcados"
+              name="interesses"
+              value="calcados"
+            />
+            Calçados
+          </label>
+
+          <label for="livros">
+            <input
+              type="checkbox"
+              id="livros"
+              name="interesses"
+              value="livros"
+            />
+            Livros
+          </label>
+
+          <label for="vestimentas">
+            <input
+              type="checkbox"
+              id="vestimentas"
+              name="interesses"
+              value="vestimentas"
+            />
+            Vestimentas
+          </label>
+        </div>
+        <br />
+
+        <p>Preferência de produtos específicos:</p>
+        <input class="input" type="text" id="preferencia" name="preferencia" />
+        <br />
+
+        <p>Preferência de forma de pagamento:</p>
+        <div class="radio-group">
+          <label for="pix">
+            <input type="radio" id="pix" name="pagamento" value="pix" />
+            Pix
+          </label>
+
+          <label for="cartao">
+            <input type="radio" id="cartao" name="pagamento" value="cartao" />
+            Cartão
+          </label>
+          <label for="boleto">
+            <input type="radio" id="boleto" name="pagamento" value="boleto" />
+            Boleto
+          </label>
+        </div>
+
+        <button type="submit">Enviar</button>
+      </form>
     </section>
   );
 };
