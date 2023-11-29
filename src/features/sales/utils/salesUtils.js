@@ -1,46 +1,37 @@
 import { getSales } from "../api/getSales";
-import { getProductById, getProducts } from "../../products/api/getProducts";
-import { getUserById } from "../../users/api/getUsers";
+import { getProducts } from "../../products/api/getProducts";
+import { getUsers } from "../../users/api/getUsers";
 
 export const getTopBuyers = async () => {
   const allSales = await getSales();
+  const allProducts = await getProducts();
+  const allUsers = await getUsers();
 
-  const processSales = await Promise.all(
-    allSales.map(async (sale) => {
-      const updatedProducts = await Promise.all(
-        sale.products.map(async (product) => {
-          try {
-            const selectedProduct = await getProductById(product.productId);
-
-            if (selectedProduct) {
-              const totalSpent = selectedProduct.price * product.quantity;
-
-              return {
-                ...product,
-                price: selectedProduct.price,
-                totalSpent,
-              };
-            } else {
-              console.error(
-                `Produto com ID ${product.productId} não encontrado.`
-              );
-              return product;
-            }
-          } catch (error) {
-            console.error(
-              `Erro ao obter informações do produto com ID ${product.productId}: ${error.message}`
-            );
-            return product;
-          }
-        })
+  const processSales = allSales.map((sale) => {
+    const updatedProducts = sale.products.map((product) => {
+      const selectedProduct = allProducts.find(
+        (p) => p.id === product.productId
       );
 
-      return {
-        ...sale,
-        products: updatedProducts,
-      };
-    })
-  );
+      if (selectedProduct) {
+        const totalSpent = selectedProduct.price * product.quantity;
+
+        return {
+          ...product,
+          price: selectedProduct.price,
+          totalSpent,
+        };
+      } else {
+        console.error(`Produto com ID ${product.productId} não encontrado.`);
+        return product;
+      }
+    });
+
+    return {
+      ...sale,
+      products: updatedProducts,
+    };
+  });
 
   const totalSpended = processSales.map((sale) => {
     let total = 0;
@@ -54,24 +45,18 @@ export const getTopBuyers = async () => {
     };
   });
 
-  const final = await Promise.all(
-    totalSpended.map(async (item) => {
-      try {
-        const user = await getUserById(item.userId);
+  const final = totalSpended.map((item) => {
+    const user = allUsers.find((u) => u.id === item.userId);
 
-        if (user) {
-          return {
-            userId: user.id,
-            name: user.name,
-            email: user.email,
-            totalSpent: item.totalSpent,
-          };
-        }
-      } catch (error) {
-        return item;
-      }
-    })
-  );
+    if (user) {
+      return {
+        userId: user.id,
+        name: user.name,
+        email: user.email,
+        totalSpent: item.totalSpent,
+      };
+    }
+  });
 
   const groupedTotals = final.reduce((acc, product) => {
     const { userId, totalSpent, name, email } = product;
@@ -156,31 +141,27 @@ const salesPerCategoryForChart = (sales) => {
 
 export const getTotalSalesFormatted = async () => {
   const allSales = await getSales();
+  const allProducts = await getProducts();
 
   const test = [];
 
-  await Promise.all(
-    allSales.map(async (sale) => {
-      await Promise.all(
-        sale.products.map(async (product) => {
-          for (let index = 0; index < product.quantity; index++) {
-            try {
-              const productRequest = await getProductById(product.productId);
-              test.push({
-                userId: sale.userId,
-                productName: productRequest.title,
-                productCategory: productRequest.category,
-                productPrice: productRequest.price,
-                saleDate: sale.date,
-              });
-            } catch (error) {
-              console.error(error);
-            }
-          }
-        })
-      );
-    })
-  );
+  allSales.map((sale) => {
+    sale.products.map((product) => {
+      for (let index = 0; index < product.quantity; index++) {
+        const productRequest = allProducts.find(
+          (p) => p.id === product.productId
+        );
+
+        test.push({
+          userId: sale.userId,
+          productName: productRequest.title,
+          productCategory: productRequest.category,
+          productPrice: productRequest.price,
+          saleDate: sale.date,
+        });
+      }
+    });
+  });
 
   const salesForChart = salesPerCategoryForChart(test);
 
