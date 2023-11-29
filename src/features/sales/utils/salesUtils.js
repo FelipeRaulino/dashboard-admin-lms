@@ -1,5 +1,5 @@
 import { getSales } from "../api/getSales";
-import { getProductById } from "../../products/api/getProducts";
+import { getProductById, getProducts } from "../../products/api/getProducts";
 import { getUserById } from "../../users/api/getUsers";
 
 export const getTopBuyers = async () => {
@@ -185,4 +185,30 @@ export const getTotalSalesFormatted = async () => {
   const salesForChart = salesPerCategoryForChart(test);
 
   return salesForChart;
+};
+
+export const getAllSales = async () => {
+  const allSales = await getSales();
+  const allProducts = await getProducts();
+
+  const test = [];
+
+  allSales.map((sale) => {
+    sale.products.map((product) => {
+      for (let index = 0; index < product.quantity; index++) {
+        const productRequest = allProducts.find(
+          (p) => p.id === product.productId
+        );
+        test.push({
+          userId: sale.userId,
+          productName: productRequest.title,
+          productCategory: productRequest.category,
+          productPrice: productRequest.price,
+          saleDate: sale.date,
+        });
+      }
+    });
+  });
+
+  return test;
 };
