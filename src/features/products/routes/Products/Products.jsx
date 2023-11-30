@@ -1,8 +1,7 @@
 import React from "react";
 
 import "./Products.css";
-import CircularProgress from "@mui/material/CircularProgress";
-import { Box } from "@mui/material";
+import { Box, Backdrop, CircularProgress, Grid, Modal, Alert, Snackbar  } from "@mui/material";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
@@ -12,12 +11,42 @@ import Typography from "@mui/material/Typography";
 import StarIcon from "@mui/icons-material/Star";
 
 import { getProducts } from "../../api/getProducts";
+import './Products.css'
+import { Height } from "@mui/icons-material";
 
 const Products = () => {
+  const [open, setOpen] = React.useState(false);
+  const [openCompra, setOpenCompra] = React.useState(false);
   const [products, setProducts] = React.useState([]);
+  const [selectedProduct, setSelectedProduct] = React.useState();
+  const [loading, setLoading] = React.useState(true);
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleOpenkCompra = () => {
+    setOpenCompra(true);
+  };
+
+  const handleCloseCompra = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpenCompra(false);
+  };
+
 
   async function fetchData() {
-    setProducts(await getProducts());
+    try{
+      setProducts(await getProducts());
+    }
+    finally{
+      setLoading(false);
+    }
   }
 
   React.useEffect(() => {
@@ -27,54 +56,78 @@ const Products = () => {
   return (
     <section className="products">
       <h1>Produtos</h1>
-      {products.length > 0 ? (
-        <Box sx={{ maxWidth: "90%", marginTop: 2 }}>
-          {products.map((product) => {
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={loading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-title"
+        aria-describedby="modal-description"
+      >
+        <Box className="modal">
+          <h2 id="modal-title">Descrição de {selectedProduct ? selectedProduct.title : ""}</h2>
+          <br/>
+          <img src={selectedProduct ? selectedProduct.image : ""}></img>
+          <p id="modal-description" className="descricao">
+            {selectedProduct ? selectedProduct.description: ""}
+          </p>
+          <Button onClick={handleClose}>Fechar  </Button>
+        </Box>
+      </Modal>
+      <Snackbar open={openCompra} autoHideDuration={4000} onClose={handleCloseCompra}>
+        <Alert onClose={handleCloseCompra} severity="success" sx={{ width: '100%' }}>
+          Compra Realizada com Sucesso!
+        </Alert>
+      </Snackbar>
+      {(
+        <Box className="box">
+          <Grid container spacing={0}>
+          {products.map((product, key) => {
             return (
-              <Box sx={{ maxWidth: "100%", marginTop: 2 }} key={product.id}>
-                <Card sx={{ display: "flex", minHeight: 300 }}>
-                  <CardMedia
-                    sx={{
-                      width: 200,
-                      height: 300,
-                    }}
-                    component="img"
-                    alt="green iguana"
-                    image={product.image}
-                  />
-                  <CardContent>
-                    <Typography gutterBottom variant="h5" component="div">
-                      {product.title} [$ {product.price}]
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      Categoria: {product.cat}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      Estoque: {product.rating.count}
-                    </Typography>
-                    <Typography variant="body2">
-                      Descrição: {product.desc}
-                    </Typography>
-                  </CardContent>
-                  <CardActions sx={{ marginRight: 5, textAlign: "center" }}>
+              <Card className="card" key={key}>
+                <CardMedia
+                  className="imagem"
+                  image={product.image}
+                  title="produto"
+                />
+                <CardContent>
+                  <Typography gutterBottom component="div" className="titulo">
+                    {product.title}
+                  </Typography>
+                  <Typography className="preco">
+                    Preço: ${product.price}
+                  </Typography>
+                  <Typography className="categoria">
+                    Categoria: {product.category}
+                  </Typography> 
+                  <Typography className="estoque">
+                    Estoque: {product.rating.count}
+                  </Typography>
+                  <Typography onClick={ () => {
+                    handleOpen()
+                    setSelectedProduct(product)
+                    }} className="btnDescricao">
+                    Ver Descrição
+                  </Typography>
+                </CardContent>
+                <CardActions className="areaCompra">
                     <Typography
                       gutterBottom
-                      variant="h5"
                       component="div"
-                      sx={{ width: 100 }}
+                      sx={{ width: 100, alignItems: 'center' }}
                     >
                       <StarIcon /> {product.rating.rate}
-                      <Button variant="outlined">Comprar</Button>
+                      <Button variant="outlined" className="btnCompra" onClick={handleOpenkCompra}>Comprar</Button>
                     </Typography>
-                  </CardActions>
-                </Card>
-              </Box>
+                </CardActions>
+              </Card>
             );
           })}
-        </Box>
-      ) : (
-        <Box sx={{ display: "flex" }}>
-          <CircularProgress />
+          </Grid>
         </Box>
       )}
     </section>
