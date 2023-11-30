@@ -1,3 +1,39 @@
-.css-rtrcn9-MuiTablePagination-root {
-  color: #fff !important;
+.sales {
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  padding: 20px;
+  background-color: #282c34;
+}
+
+.MuiDataGrid-root {
+  color: #fff;
+  background-color: transparent;
+  width: 100% !important;
+}
+
+.MuiTableContainer-root {
+  border: 2px solid #fff;
+  border-radius: 8px;
+}
+
+.MuiTableHead-root {
+  background-color: #3f51b5;
+}
+
+.MuiDataGrid-cell {
+  border-bottom: 1px solid #fff;
+}
+
+.MuiDataGrid-columnHeader, .MuiDataGrid-cell {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.MuiPaginationItem-page.Mui-selected {
+  background-color: #3f51b5;
+}
+
+.MuiPaginationItem-page:hover {
+  background-color: #303f9f;
 }
