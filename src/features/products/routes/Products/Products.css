@@ -21,9 +21,9 @@
     margin-right: 10px;
     border-radius: 10px;
 }
-@media (max-width: 481px) {
+@media (max-width: 650px) {
     .modal {
-        top: 17%;
+        top: 0;
         left: 0;
         width: 100%;
     }
