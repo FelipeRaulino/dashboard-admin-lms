@@ -118,7 +118,6 @@ const Products = () => {
                     <Typography
                       gutterBottom
                       component="div"
-                      sx={{ width: 100, alignItems: 'center' }}
                     >
                       <StarIcon /> {product.rating.rate}
                       <Button variant="outlined" className="btnCompra" onClick={handleOpenkCompra}>Comprar</Button>
