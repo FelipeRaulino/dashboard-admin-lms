@@ -1,9 +1,7 @@
-import React from "react";
-
-import "./Users.css";
-import { Box } from "@mui/material";
+import React, { useState, useEffect } from "react";
+import { Box, Backdrop, CircularProgress } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-
+import "./Users.css";
 import { getUsers } from "../../api/getUsers";
 
 const Users = () => {
@@ -13,39 +11,61 @@ const Users = () => {
     { field: "email", headerName: "Email", flex: 1 },
   ];
 
-  const [users, setUsers] = React.useState([]);
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   async function fetchData() {
-    const usersResponse = await getUsers();
+    try {
+      const usersResponse = await getUsers();
 
-    setUsers(
-      usersResponse.map((user) => {
-        return {
-          id: user.id,
-          username: user.name.firstname + " " + user.name.lastname,
-          email: user.email,
-        };
-      })
-    );
+      setUsers(
+        usersResponse.map((user) => {
+          return {
+            id: user.id,
+            username: user.name.firstname + " " + user.name.lastname,
+            email: user.email,
+          };
+        })
+      );
+    } finally {
+      setLoading(false);
+    }
   }
 
-  React.useEffect(() => {
+  const [sortModel, setSortModel] = React.useState([]);
+
+  const handleSortModelChange = (newModel) => {
+    setSortModel(newModel);
+  };
+
+  useEffect(() => {
     fetchData();
   }, []);
 
   return (
     <section className="users">
       <h1>Clientes</h1>
-      <Box sx={{ height: 400, maxWidth: "98%", marginTop: 4 }}>
-        <DataGrid
-          rows={!!users && users}
-          columns={columns}
-          sx={{
-            color: "#fff",
-            borderColor: "#fff",
-            border: 2,
-          }}
-        />
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={loading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+      <Box sx={{ maxWidth: "98%", marginTop: 4, position: "relative" }}>
+        {!!users && (
+          <DataGrid
+            rows={users}
+            columns={columns}
+            sortModel={sortModel}
+            onSortModelChange={handleSortModelChange}
+            sx={{
+              color: "#fff",
+              borderColor: "#fff",
+              border: 2,
+              transition: "height 0.5s",
+            }}
+          />
+        )}
       </Box>
     </section>
   );

@@ -1,5 +1,4 @@
-import React from "react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Box, Backdrop, CircularProgress } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import "./Sales.css";
@@ -54,12 +53,11 @@ const Sales = () => {
     }
   }
 
-  const defaultSortModel = [
-    {
-      field: "count",
-      sort: "desc",
-    },
-  ];
+  const [sortModel, setSortModel] = React.useState([]);
+
+  const handleSortModelChange = (newModel) => {
+    setSortModel(newModel);
+  };
 
   useEffect(() => {
     fetchData();
@@ -68,25 +66,27 @@ const Sales = () => {
   return (
     <section className="sales">
       <h1>Sales</h1>
-      <br/>
       <Backdrop
         sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={loading}
       >
         <CircularProgress color="inherit" />
       </Backdrop>
-      <Box sx={{ width: "98%", position: "relative" }}>
-        <DataGrid
-          rows={!!users && users}
-          columns={columns}
-          sortModel={defaultSortModel}
-          sx={{
-            color: "#fff",
-            borderColor: "#fff",
-            border: 2,
-            transition: "height 0.5s",
-          }}
-        />
+      <Box sx={{ width: "98%", marginTop: 4, position: "relative" }}>
+        {!!users && (
+          <DataGrid
+            rows={users}
+            columns={columns}
+            sortModel={sortModel}
+            onSortModelChange={handleSortModelChange}
+            sx={{
+              color: "#fff",
+              borderColor: "#fff",
+              border: 2,
+              transition: "height 0.5s",
+            }}
+          />
+        )}
       </Box>
     </section>
   );
